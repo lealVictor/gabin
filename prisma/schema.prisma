@@ -10,42 +10,40 @@ generator client {
 }
 
 //
-// USUÁRIOS
+// USUÁRIOS (NextAuth Google Login)
 //
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String?  @unique
-  image     String?  // foto do Google
-  emailVerified DateTime?  // quando o e-mail foi verificado
-  phone     String?
-  password  String?
+  id            String    @id @default(cuid())
+  name          String
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String? // foto do Google
+  phone         String?
+  password      String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  ownedWorkspaces Workspace[] @relation("WorkspaceOwners")
-  calendarAssignments CalendarUser[]
+  tasks   Task[]
+  tickets Ticket[]
 
   accounts Account[]
   sessions Session[]
 }
 
-//
-// ACCOUNT E SESSIONS (NextAuth)
-//
 model Account {
-  id                 Int     @id @default(autoincrement())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
+  id                Int     @id @default(autoincrement())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id])
 
@@ -70,121 +68,87 @@ model VerificationToken {
 }
 
 //
-// WORKSPACES
+// LEADS / SOLICITANTES
 //
-model Workspace {
+model Lead {
+  id         Int      @id @default(autoincrement())
+  lead_name  String
+  lead_whats String?
+  tag        String // rastrear origem do cadastro
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tasks Task[]
+}
+
+//
+// TAREFAS / DEMANDAS
+//
+model Task {
+  id          Int        @id @default(autoincrement())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  leadId      Int?
+  lead        Lead?      @relation(fields: [leadId], references: [id])
+  title       String
+  description String
+  status      TaskStatus @default(IN_PROGRESS)
+  attachment  String? // URL do arquivo/foto
+  meta        String?
+  cep         String?
+  numero      String?
+  logradouro  String?
+  bairro      String?
+  cidade      String?
+  uf          String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum TaskStatus {
+  IN_PROGRESS
+  COMPLETED
+}
+
+//
+// TICKETS
+//
+model Ticket {
+  id         Int      @id @default(autoincrement())
+  titulo     String
+  descricao  String
+  categoria  String
+  prioridade String
+  userId     String? // id do usuário opcional
+  user       User?    @relation(fields: [userId], references: [id])
+  subject    String?
+  createdAt  DateTime @default(now())
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+enum TicketType {
+  GENERAL
+  CADASTRO
+  SUPORTE
+  DEMANDA
+}
+
+//
+// EVENTOS
+//
+model Event {
   id          Int       @id @default(autoincrement())
-  name        String
-  logo        String?
-  color       String?
-  friendlyUrl String    @unique
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-
-  owners      User[]       @relation("WorkspaceOwners")
-  calendars   Calendar[]
-  subscriptions Subscription[]
-}
-
-//
-// AGENDAS
-//
-model Calendar {
-  id          Int      @id @default(autoincrement())
-  workspaceId Int
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  name        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  assignedUsers CalendarUser[]
-  appointments AppointmentMaster[]
-}
-
-model CalendarUser {
-  id         Int      @id @default(autoincrement())
-  calendarId Int
-  userId     String
-  calendar   Calendar @relation(fields: [calendarId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
-
-  @@unique([calendarId, userId])
-}
-
-//
-// PLANOS E ASSINATURAS
-//
-model Plan {
-  id       Int     @id @default(autoincrement())
-  name     String
-  type     String   // BY_SCHEDULES ou BY_CALENDARS
-  price    Float
-  limits   Json?    // { "maxCalendars": 5, "maxAppointments": 1000 }
-
-  subscriptions Subscription[]
-}
-
-model Subscription {
-  id          Int       @id @default(autoincrement())
-  workspaceId Int
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  planId      Int
-  plan        Plan      @relation(fields: [planId], references: [id])
-  startDate   DateTime  @default(now())
-  endDate     DateTime?
-  active      Boolean   @default(true)
-}
-
-//
-// CLIENTES FINAIS
-//
-model Customer {
-  id        Int        @id @default(autoincrement())
-  name      String
-  email     String?
-  phone     String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-
-  appointments AppointmentMaster[]
-}
-
-//
-// AGENDAMENTOS
-//
-model AppointmentMaster {
-  id          Int       @id @default(autoincrement())
-  customerId  Int
-  customer    Customer  @relation(fields: [customerId], references: [id])
-  calendarId  Int
-  calendar    Calendar  @relation(fields: [calendarId], references: [id])
-  dateTime    DateTime
-  status      AppointmentStatus @default(SCHEDULED)
-
-  details   AppointmentDetail[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model AppointmentDetail {
-  id             Int               @id @default(autoincrement())
-  appointmentId  Int
-  appointment    AppointmentMaster @relation(fields: [appointmentId], references: [id])
-  service        String
-  status         AppointmentStatus @default(SCHEDULED)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-//
-// ENUM STATUS
-//
-enum AppointmentStatus {
-  SCHEDULED
-  CONFIRMED
-  CANCELED
-  COMPLETED
 }
 
 //
@@ -196,6 +160,6 @@ model AuditLog {
   entityId  Int
   action    String
   changes   Json?
-  userId    String?   // ajustado para String
+  userId    String?
   createdAt DateTime @default(now())
 }

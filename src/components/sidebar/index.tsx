@@ -5,9 +5,11 @@ import React, { useState, useEffect } from "react";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  activePage: "Demandas" | "Assessores" | "Chamados";
+  setActivePage: (page: "Demandas" | "Assessores" | "Chamados") => void;
 };
 
-export default function Sidebar({ isOpen, onClose }: Props) {
+export default function Sidebar({ isOpen, onClose, activePage, setActivePage }: Props) {
   // Controla animação de entrada/saída
   const [visible, setVisible] = useState(false);
 
@@ -16,9 +18,13 @@ export default function Sidebar({ isOpen, onClose }: Props) {
   }, [isOpen]);
 
   const handleClose = () => {
-    // Adiciona delay para animação de saída
     setVisible(false);
-    setTimeout(() => onClose(), 300); // 300ms = duração da animação
+    setTimeout(() => onClose(), 300); 
+  };
+
+  const handleClick = (page: "Demandas" | "Assessores" | "Chamados" ) => {
+    setActivePage(page);
+    handleClose();
   };
 
   return (
@@ -37,16 +43,47 @@ export default function Sidebar({ isOpen, onClose }: Props) {
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="p-4 flex justify-between items-center">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-white">Menu</h2>
+        <div className="p-4 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg font-bold text-gray-800 dark:text-white">Gabinete</h2>
           <button onClick={handleClose} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700">
             X
           </button>
         </div>
-        {/* Conteúdo da sidebar */}
-        <div className="p-4">
-          <p>Notificações, informações, links...</p>
-        </div>
+
+        {/* Links do Dashboard */}
+        <ul className="flex flex-col p-4 space-y-2">
+          <li>
+            <button
+              onClick={() => handleClick("Demandas")}
+              className={`w-full text-left p-2 rounded ${
+                activePage === "Demandas" ? "bg-gray-200 dark:bg-gray-700 font-semibold" : ""
+              } hover:bg-gray-100 dark:hover:bg-gray-700`}
+            >
+              Demandas
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => handleClick("Assessores")}
+              className={`w-full text-left p-2 rounded ${
+                activePage === "Assessores" ? "bg-gray-200 dark:bg-gray-700 font-semibold" : ""
+              } hover:bg-gray-100 dark:hover:bg-gray-700`}
+            >
+              Assessores
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => handleClick("Chamados")}
+              className={`w-full text-left p-2 rounded ${
+                activePage === "Chamados" ? "bg-gray-200 dark:bg-gray-700 font-semibold" : ""
+              } hover:bg-gray-100 dark:hover:bg-gray-700`}
+            >
+              Chamados
+            </button>
+          </li>
+          
+        </ul>
       </div>
     </>
   );

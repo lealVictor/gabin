@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig = {
   images: {
-    domains: ["lh3.googleusercontent.com"], // 👈 libera domínio do Google
+    domains: ["lh3.googleusercontent.com"], 
   },
 };
 

@@ -10,7 +10,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="pt-BR">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-black`}>
         <ClientProviders>
-          <header className="p-4 flex justify-end">
+          <header className="flex justify-end">
           </header>
           {children}
         </ClientProviders>

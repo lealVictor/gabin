@@ -1,0 +1,35 @@
+<option value="">Selecione um assessor</option>
+                                                        <option value="Aldo Cristian Cezar">Aldo Cristian Cezar</option>
+                                                         <option value="Amanda Regenold Carretoni dos Santos">Amanda Regenold Carretoni dos Santos</option>
+                                                        <option value="Brenda Vital de Oliveira">Brenda Vital de Oliveira</option>
+                                                        <option value="Daniele de Oliveira Gomes Ribeiro">Daniele de Oliveira Gomes Ribeiro</option>
+                                                        <option value="Débora cortes dos Santos">Débora cortes dos Santos</option>
+                                                         <option value="Ewerton Marcelo de Souza">Ewerton Marcelo de Souza</option>
+                                                        <option value="Manoel Paixão dos Santos">Manoel Paixão dos Santos</option>
+                                                        <option value=">Marcelo De Siqueira Borges">Marcelo De Siqueira Borges</option>
+                                                        
+                                                        <option value="Marcos Rocha Martins da Silva">Marcos Rocha Martins da Silva</option>
+
+                                                        <option value="Maria Auxiliadora Martins">Maria Auxiliadora Martins</option>
+                                                        <option value="Maura Souza de Oliveira">Maura Souza de Oliveira</option>
+                                                       
+                                                       
+                                                        <option value="Laura Perez da Silva">Laura Perez da Silva</option>
+                                                        <option value="Rafael Ricardo De Oliveira Torres">Rafael Ricardo De Oliveira Torres</option>
+                                                        <option value="Maria Nimer">Maria Nimer</option>
+                                                        <option value="Katiane Delvahle Niedack Silva">Katiane Delvahle Niedack Silva</option>
+                                                        <option value="Cristiane Corrêa">Cristiane Corrêa</option>
+                                                        
+                                                        <option value="Neemia G.O. de Camargo.">Neemia G.O. de Camargo.</option>
+                                                       
+                                                        <option value="Leandro Borges de Oliveira">Leandro Borges de Oliveira</option>
+                                                        <option value="Lucivaldo da Silva Lima Noivo">Lucivaldo da Silva Lima Noivo</option>
+                                                        <option value="Ronaldo domingues da silva">Ronaldo domingues da silva</option>
+                                                        <option value="Sarah Valente Gonçalves">Sarah Valente Gonçalves</option>
+                                                        
+                                                        <option value="Thalys Welker Mata de Melo">Thalys Welker Mata de Melo</option>
+                                                        <option value="Tiago souza ramiro">Tiago souza ramiro</option>
+                                                        <option value="Vinícius Rios Ferreira">Vinícius Rios Ferreira</option>
+                                                        <option value="William Xavier Barbosa">William Xavier Barbosa</option>
+                                                        
+                                                        <option value="Ygor Lobo">Ygor Lobo</option>

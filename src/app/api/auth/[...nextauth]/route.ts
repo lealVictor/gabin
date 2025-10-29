@@ -8,7 +8,6 @@ import bcrypt from "bcryptjs";
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
-    // Email / senha
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -25,18 +24,17 @@ export const authOptions = {
 
         if (!user) throw new Error("Usuário não encontrado");
 
-        const isValid = await bcrypt.compare(credentials.password, user.password);
+        const isValid = await bcrypt.compare(credentials.password, user.password!);
         if (!isValid) throw new Error("Senha inválida");
 
         return {
-          id: user.id.toString(),
+          id: user.id,
           name: user.name,
           email: user.email,
+          role: user.role ?? "USER",
         };
       },
     }),
-
-    // Google
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -44,18 +42,25 @@ export const authOptions = {
   ],
   session: {
     strategy: "jwt" as const,
-    maxAge: 60 * 60 * 24, // 1 dia
+    maxAge: 60 * 60 * 24,
   },
   pages: {
     signIn: "/login",
   },
   callbacks: {
     async jwt({ token, user }: { token: any; user?: any }) {
-      if (user) token.id = user.id;
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+      }
       return token;
     },
     async session({ session, token }: { session: any; token: any }) {
-      if (token) session.user.id = token.id;
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.role = token.role;
+        // ✅ NÃO adicionamos accessToken aqui, então TS não reclama
+      }
       return session;
     },
   },
